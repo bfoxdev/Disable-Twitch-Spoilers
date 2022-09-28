@@ -1,0 +1,28 @@
+{
+  "description": "Hides traces of VOD length for twitch.tv",
+  "manifest_version": 2,
+  "name": "twitch-vod-time-remover",
+  "version": "1.0",
+  "homepage_url": "https://github.com/bafox2/twitch-vod-time-remover",
+  "icons": {
+    "32": "icons/twitch-32.png",
+    "48": "icons/twitch-48.png"
+  },
+
+  "permissions": ["activeTab"],
+  "content_scripts": [
+    {
+      "matches": ["https://www.twitch.tv/videos/*"],
+      "js": ["progressbar.js"]
+    },
+    {
+      "matches": ["https://www.twitch.tv/*/videos"],
+      "js": ["timestamps.js"]
+    }
+  ],
+  "browser_action": {
+    "default_icon": "icons/twitch-32.png",
+    "default_title": "Twitch Spoiler Avoider",
+    "default_popup": "popup/menu.html"
+  }
+}
