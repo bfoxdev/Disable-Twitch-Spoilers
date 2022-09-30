@@ -87,6 +87,6 @@ function reportExecuteScriptError(error) {
  * If we couldn't inject the script, handle the error.
  */
 browser.tabs
-  .executeScript({ file: '/content_scripts/beastify.js' })
+  .executeScript({ file: '/content_scripts/vod-time-remover.js' })
   .then(listenForClicks)
   .catch(reportExecuteScriptError)

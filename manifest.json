@@ -5,23 +5,19 @@
   "version": "1.0",
   "homepage_url": "https://github.com/bafox2/twitch-vod-time-remover",
   "icons": {
-    "32": "icons/twitch-32.png",
-    "48": "icons/twitch-48.png"
+    "32": "icons/ez-32.webp",
+    "48": "icons/ez-48.ico"
   },
 
   "permissions": ["activeTab"],
   "content_scripts": [
     {
-      "matches": ["https://www.twitch.tv/videos/*"],
-      "js": ["progressbar.js"]
-    },
-    {
-      "matches": ["https://www.twitch.tv/*/videos"],
-      "js": ["timestamps.js"]
+      "matches": ["https://www.twitch.tv/*"],
+      "js": ["progressbar.js", "timestamps.js"]
     }
   ],
   "browser_action": {
-    "default_icon": "icons/twitch-32.png",
+    "default_icon": "icons/ez-32.webp",
     "default_title": "Twitch Spoiler Avoider",
     "default_popup": "popup/menu.html"
   }
