@@ -1,8 +1,8 @@
 {
-  "description": "Hides traces of VOD length for twitch.tv",
+  "description": "Hides traces of VOD length for twitch.tv, specifically the timestamps on video preview, in the vod player ",
   "manifest_version": 2,
   "name": "twitch-vod-time-remover",
-  "version": "1.0",
+  "version": "3.0",
   "homepage_url": "https://github.com/bafox2/twitch-vod-time-remover",
   "icons": {
     "32": "icons/ez-32.webp",
@@ -13,7 +13,7 @@
   "content_scripts": [
     {
       "matches": ["https://www.twitch.tv/*"],
-      "js": ["progressbar.js", "timestamps.js"]
+      "js": ["content_scripts/vod-time-remover.js"]
     }
   ],
   "browser_action": {
