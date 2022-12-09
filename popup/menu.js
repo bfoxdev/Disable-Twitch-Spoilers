@@ -1,66 +1,43 @@
-//js for the popup that tells the content scrips what to run
-// Path: popup/menu.js
+//options for the menu
+let hideTitles = document.querySelector('input[name=checkbox_titles]')
+let hideTimestamps = document.querySelector('input[name=checkbox_timestamps]')
+let hidePercentages = document.querySelector('input[name=checkbox_percentages]')
 
-function listenerTimestamp() {
-  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
-    browser.tabs.sendMessage(tabs[0].id, { command: 'timestamp' })
+//add event listeners to the checkboxes that will interact with local storage
+hideTitles.addEventListener('change', (event) => {
+  browser.storage.local.set({ hideTitles: event.target.checked })
+})
+hideTimestamps.addEventListener('change', (event) => {
+  browser.storage.local.set({ hideTimestamps: event.target.checked })
+})
+hidePercentages.addEventListener('change', (event) => {
+  browser.storage.local.set({ hidePercentages: event.target.checked })
+})
+
+//get the current state of the checkboxes from local storage
+browser.storage.local
+  .get(['hideTitles', 'hideTimestamps', 'hidePercentages'])
+  .then((result) => {
+    hideTitles.checked = result.hideTitles
+    hideTimestamps.checked = result.hideTimestamps
+    hidePercentages.checked = result.hidePercentages
   })
+
+//check if any of the checkboxes are checked and if so, run a brower action
+//add a listener to the checkboxes that will checks to see if anything is checked and if so, run the browser action
+console.log(browser)
+console.log(browser.browserAction)
+browser.browserAction
+  .setIcon({
+    path: 'ez-32.png',
+  })
+  .then(onFinished, onReject)
+  .then(console.log('donedonedone'))
+
+function onFinished(done) {
+  console.log('finished', done)
 }
 
-function listenerPercentages() {
-  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
-    browser.tabs.sendMessage(tabs[0].id, { command: 'percentages' })
-  })
+function onReject(error) {
+  console.log('error', error)
 }
-
-function reset() {
-  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
-    browser.tabs.sendMessage(tabs[0].id, { command: 'reset' })
-  })
-}
-
-function listenerTitles() {
-  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
-    browser.tabs.sendMessage(tabs[0].id, { command: 'titles' })
-  })
-}
-function listenerTimestampJS() {
-  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
-    browser.tabs.sendMessage(tabs[0].id, { command: 'timestampjs' })
-  })
-}
-
-function listenerAll() {
-  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
-    browser.tabs.sendMessage(tabs[0].id, { command: 'all' })
-  })
-}
-
-function switchIcon() {
-  console.log('switching icon')
-  browser.browserAction.setIcon({
-    path: {
-      32: 'ez-noglasses-32.webp',
-    },
-  })
-}
-
-//the browser.setIcon should check if there is a style tag with an id of vodremover or percentageremover and if there is, change the icon to the active icon
-//if there is not, change the icon to the inactive icon
-// browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
-//   browser.tabs.sendMessage(tabs[0].id, { command: 'check' })
-// })
-
-document
-  .getElementById('timestamp')
-  .addEventListener('click', listenerTimestamp)
-document.getElementById('reset').addEventListener('click', reset)
-document
-  .getElementById('percentages')
-  .addEventListener('click', listenerPercentages)
-document.getElementById('titles').addEventListener('click', listenerTitles)
-document
-  .getElementById('timestampjs')
-  .addEventListener('click', listenerTimestampJS)
-document.getElementById('all').addEventListener('click', listenerAll)
-document.getElementById('icon').addEventListener('click', switchIcon)

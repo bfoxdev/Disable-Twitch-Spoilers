@@ -8,12 +8,16 @@
     "32": "icons/ez-32.webp",
     "48": "icons/ez-48.ico"
   },
-
-  "permissions": ["activeTab"],
+  "permissions": ["activeTab", "storage", "scripting", "https://twitch.tv/*"],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
   "content_scripts": [
     {
       "matches": ["https://www.twitch.tv/*"],
-      "js": ["content_scripts/vod-time-remover.js"]
+      "js": ["spoilerContent.js"],
+      "run_at": "document_end"
     }
   ],
   "browser_action": {
