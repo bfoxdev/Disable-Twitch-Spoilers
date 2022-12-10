@@ -21,7 +21,7 @@
     }
   ],
   "browser_action": {
-    "default_icon": "icons/ez-32.webp",
+    "default_icon": "icons/ez-noglasses-32v2.webp",
     "default_title": "Twitch Spoiler Avoider",
     "default_popup": "popup/menu.html"
   }

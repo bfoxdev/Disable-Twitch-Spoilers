@@ -1,62 +1,52 @@
-// background should monitor for changes in storage and send messages to content script
-console.log('background script running')
-
-browser.runtime.onInstalled.addListener(() => {
-  browser.storage.local.set({ hideTitles: true })
-  browser.storage.local.set({ hideTimestamps: true })
-  browser.storage.local.set({ hidePercentages: true })
-})
-
 //when local storage is changed, send a message to the content script
 browser.storage.onChanged.addListener((changes, areaName) => {
-  console.log('changes: ', changes)
-  console.log('areaName: ', areaName)
   if (areaName === 'local') {
-    if (changes.hideTitles) {
-      console.log('hideTitles changed')
+    if (changes.checkbox_titles) {
       browser.tabs.query({ url: 'https://www.twitch.tv/*' }).then((tabs) => {
-        console.log('tabs: ', tabs)
         tabs.forEach((tab) => {
           browser.tabs.sendMessage(tab.id, {
-            hideTitles: changes.hideTitles.newValue,
+            checkbox_titles: changes.checkbox_titles.newValue,
           })
         })
       })
     }
-    if (changes.hideTimestamps) {
-      console.log('hideTimestamps changed')
+    if (changes.checkbox_timestamps) {
+      console.log('checkbox_timestamps changed')
       browser.tabs.query({ url: 'https://www.twitch.tv/*' }).then((tabs) => {
-        console.log('tabs: ', tabs)
         tabs.forEach((tab) => {
           browser.tabs.sendMessage(tab.id, {
-            hideTimestamps: changes.hideTimestamps.newValue,
+            checkbox_timestamps: changes.checkbox_timestamps.newValue,
           })
         })
       })
     }
-    if (changes.hidePercentages) {
-      console.log('hidePercentages changed')
+    if (changes.checkbox_percentages) {
       browser.tabs.query({ url: 'https://www.twitch.tv/*' }).then((tabs) => {
-        console.log('tabs: ', tabs)
         tabs.forEach((tab) => {
           browser.tabs.sendMessage(tab.id, {
-            hidePercentages: changes.hidePercentages.newValue,
+            checkbox_percentages: changes.checkbox_percentages.newValue,
+          })
+        })
+      })
+    }
+    if (changes.checkbox_preview) {
+      browser.tabs.query({ url: 'https://www.twitch.tv/*' }).then((tabs) => {
+        tabs.forEach((tab) => {
+          browser.tabs.sendMessage(tab.id, {
+            checkbox_preview: changes.checkbox_preview.newValue,
           })
         })
       })
     }
   }
 })
-browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  console.log(
-    'tabId: ',
-    tabId,
-    'changeInfo: ',
-    changeInfo,
-    'tab: ',
-    tab,
-    'listener for tabs.onUpdated'
-  )
 
-  browser.storage.local.get(['hideTitles', 'hideTimestamps', 'hidePercentages'])
+//when the twitch tab load status is complete, send a message to the content script
+browser.tabs.onUpdated.addListener((tabId, changeInfo) => {
+  if (changeInfo.status === 'complete') {
+    //send a message to the tab that was just updated
+    browser.tabs.sendMessage(tabId, {
+      loaded: true,
+    })
+  }
 })
