@@ -25,19 +25,3 @@ browser.storage.local
 
 //check if any of the checkboxes are checked and if so, run a brower action
 //add a listener to the checkboxes that will checks to see if anything is checked and if so, run the browser action
-console.log(browser)
-console.log(browser.browserAction)
-browser.browserAction
-  .setIcon({
-    path: 'ez-32.png',
-  })
-  .then(onFinished, onReject)
-  .then(console.log('donedonedone'))
-
-function onFinished(done) {
-  console.log('finished', done)
-}
-
-function onReject(error) {
-  console.log('error', error)
-}

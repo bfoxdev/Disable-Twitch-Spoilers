@@ -1,8 +1,8 @@
-console.log('background.js loaded')
+//this is the content script that runs on the twitch page
+//it listens for messages from the background script
+//and executes the appropriate script
 
-const removeTitlesScript = `(${removeTitles})()`
-const removeTimestampsScript = `(${removeTimestamps})()`
-const removePercentagesScript = `(${removePercentages})()`
+console.log('spoilerconetent.js loaded')
 
 const removeTitleScript2 = ` document.querySelectorAll('.tw-link > h3').forEach((node) => {  node.style.display = 'none'})document.querySelector('[data-a-target="stream-title"]').style.display ='none'`
 const removeTimestampsScript2 = `document.querySelectorAll('.tw-media-card-stat').forEach((node) => {  if (node.textContent.includes(':')) {    node.style.display = 'none'  }})`
@@ -16,58 +16,75 @@ function onError(error) {
   console.log(`Error: ${error}`)
 }
 
+//add the event listener to the content script
+browser.runtime.onMessage.addListener((message) => {
+  console.log('message: ', message)
+  if (message.hideTitles === true) {
+    console.log('hideTitles is true')
+    document.querySelectorAll('.tw-link > h3').forEach((node) => {
+      node.style.display = 'none'
+    })
+    document.querySelector('[data-a-target="stream-title"]').style.display =
+      'none'
+  }
+  if (message.hideTitles === false) {
+    document.querySelectorAll('.tw-link > h3').forEach((node) => {
+      node.style.display = 'block'
+    })
+    document.querySelector('[data-a-target="stream-title"]').style.display =
+      'block'
+  }
+
+  if (message.hideTimestamps === true) {
+    console.log('hideTimestamps is true')
+    document.querySelectorAll('.tw-media-card-stat').forEach((node) => {
+      if (node.textContent.includes(':')) {
+        node.style.display = 'none'
+      }
+    })
+  }
+  if (message.hideTimestamps === false) {
+    document.querySelectorAll('.tw-media-card-stat').forEach((node) => {
+      if (node.textContent.includes(':')) {
+        node.style.display = 'block'
+      }
+    })
+  }
+  if (message.hidePercentages === true) {
+    console.log('hidePercentages is true')
+    document.querySelector('.seekbar-bar').style.display = 'none'
+    document.querySelector('[data-a-target="player-seekbar"]').style.display =
+      'none'
+  }
+  if (message.hidePercentages === false) {
+    document.querySelectorAll('.seekbar-bar').forEach((node) => {
+      node.style.display = 'block'
+    })
+  }
+})
+
+function removeTitle() {
+  console.log('removeTitle function called')
+  console.log(document)
+  document.querySelectorAll('.tw-link > h3').forEach((node) => {
+    node.style.display = 'none'
+  })
+  document.querySelector('[data-a-target="stream-title"]').style.display =
+    'none'
+}
+
 function removeTimestamps() {
-  console.log('running removeTimestamps')
+  console.log('removeTimestamps function called')
   document.querySelectorAll('.tw-media-card-stat').forEach((node) => {
     if (node.textContent.includes(':')) {
       node.style.display = 'none'
     }
   })
 }
+
 function removePercentages() {
-  console.log('running removePercentages')
+  console.log('removePercentages function called')
   document.querySelectorAll('.seekbar-bar').forEach((node) => {
     node.style.display = 'none'
   })
 }
-
-function removeTitles() {
-  console.log('running removeTitles')
-  document.querySelectorAll('.tw-link > h3').forEach((node) => {
-    node.style.display = 'none'
-    console.log(node.style.display)
-  })
-  document.querySelector('[data-a-target="stream-title"]').style.display =
-    'none'
-}
-
-const settings = browser.storage.local.get([
-  'hideTitles',
-  'hideTimestamps',
-  'hidePercentages',
-])
-settings.then((result) => {
-  console.log('result: ', result)
-  browser.tabs.executeScript({
-    code: `console.log('content script running from spoilercontent')`,
-    runAt: 'document_end',
-  })
-  if (result.hideTimestamps) {
-    browser.tabs.executeScript({
-      code: removeTimestampsScript2,
-      runAt: 'document_end',
-    })
-  }
-  if (result.hidePercentages) {
-    browser.tabs.executeScript({
-      code: removePercentagesScript2,
-      runAt: 'document_end',
-    })
-  }
-  if (result.hideTitles) {
-    browser.tabs.executeScript({
-      code: removeTitleScript2,
-      runAt: 'document_end',
-    })
-  }
-})
