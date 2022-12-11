@@ -1,30 +1,15 @@
 //options for the menu
-let checkbox_titles = document.querySelector('input[name=checkbox_titles]')
-let checkbox_timestamps = document.querySelector(
-  'input[name=checkbox_timestamps]'
-)
-let checkbox_percentages = document.querySelector(
-  'input[name=checkbox_percentages]'
-)
-let checkbox_preview = document.querySelector('input[name=checkbox_preview]')
-let settings = [
-  checkbox_titles,
-  checkbox_timestamps,
-  checkbox_percentages,
-  checkbox_preview,
-]
+let checkbox_titles = document.querySelector('input[name=checkbox_titles]');
+let checkbox_timestamps = document.querySelector('input[name=checkbox_timestamps]');
+let checkbox_percentages = document.querySelector('input[name=checkbox_percentages]');
+let checkbox_preview = document.querySelector('input[name=checkbox_preview]');
+let settings = [checkbox_titles, checkbox_timestamps, checkbox_percentages, checkbox_preview];
 
 //change the icon if any checkboxes are unchecked
 function checkIcon() {
   browser.storage.local
-    .get([
-      'checkbox_titles',
-      'checkbox_timestamps',
-      'checkbox_percentages',
-      'checkbox_preview',
-    ])
-    .then((result) => {
-      console.log('result: ', result)
+    .get(['checkbox_titles', 'checkbox_timestamps', 'checkbox_percentages', 'checkbox_preview'])
+    .then(result => {
       if (
         result.checkbox_titles === true ||
         result.checkbox_timestamps === true ||
@@ -39,7 +24,7 @@ function checkIcon() {
             64: '../icons/ez-32.png',
             128: '../icons/ez-32.png',
           },
-        })
+        });
       } else {
         browser.browserAction.setIcon({
           path: {
@@ -49,37 +34,24 @@ function checkIcon() {
             64: '../icons/hard-32.png',
             128: '../icons/hard-32.png',
           },
-        })
+        });
       }
-    })
-}
-//add an event listener to all of the elements in the settings array
+    });
+} //add an event listener to all of the elements in the settings array
+settings.forEach(setting => {
+  setting.addEventListener('change', event => {
+    console.log(event.target.name, event.target.checked, 'event.target.name, event.target.checked');
+    browser.storage.local.set({ [event.target.name]: event.target.checked });
+    checkIcon();
+  });
+});
 
-//add an event listener to all of the elements in the settings array
-settings.forEach((setting) => {
-  setting.addEventListener('change', (event) => {
-    //set the current state of the checkboxes from local storage
-    console.log([event.target.name], event.target.checked, 'event.target.name')
-    browser.storage.local.set({ [event.target.name]: event.target.checked })
-    checkIcon()
-  })
-})
-
-//add event listeners to the checkboxes that will interact with local storage
-// checkbox_titles.addEventListener('change', (event) => {
-//   browser.storage.local.set({ checkbox_titles: event.target.checked })
-// })
-// checkbox_timestamps.addEventListener('change', (event) => {
-//   browser.storage.local.set({ checkbox_timestamps: event.target.checked })
-// })
-// checkbox_percentages.addEventListener('change', (event) => {
-//   browser.storage.local.set({ checkbox_percentages: event.target.checked })
-// })
-
-// checkbox_preview.addEventListener('change', (event) => {
-//   browser.storage.local.set({ checkbox_preview: event.target.checked })
-// })
-
-//get the current state of the checkboxes from local storage
-//check if any of the checkboxes are checked and if so, run a brower action
-//add a listener to the checkboxes that will checks to see if anything is checked and if so, run the browser action
+//get the current settings from storage and set the checkboxes accordingly
+browser.storage.local
+  .get(['checkbox_titles', 'checkbox_timestamps', 'checkbox_percentages', 'checkbox_preview'])
+  .then(result => {
+    checkbox_titles.checked = result.checkbox_titles;
+    checkbox_timestamps.checked = result.checkbox_timestamps;
+    checkbox_percentages.checked = result.checkbox_percentages;
+    checkbox_preview.checked = result.checkbox_preview;
+  });
