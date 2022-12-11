@@ -7,7 +7,7 @@
   "icons": {
     "32": "icons/ez-32.png"
   },
-  "permissions": ["activeTab", "storage", "scripting", "https://twitch.tv/*"],
+  "permissions": ["activeTab", "storage"],
   "background": {
     "scripts": ["background.js"],
     "persistent": false
