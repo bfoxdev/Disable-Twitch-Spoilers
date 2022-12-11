@@ -24,22 +24,13 @@ function checkIcon() {
       'checkbox_preview',
     ])
     .then((result) => {
+      console.log('result: ', result)
       if (
-        result.checkbox_titles === false ||
-        result.checkbox_timestamps === false ||
-        result.checkbox_percentages === false ||
-        result.checkbox_preview === false
+        result.checkbox_titles === true ||
+        result.checkbox_timestamps === true ||
+        result.checkbox_percentages === true ||
+        result.checkbox_preview === true
       ) {
-        browser.browserAction.setIcon({
-          path: {
-            16: '../icons/ez-noglasses-32v2.png',
-            32: '../icons/ez-noglasses-32v2.png',
-            48: '../icons/ez-noglasses-32v2.png',
-            64: '../icons/ez-noglasses-32v2.png',
-            128: '../icons/ez-noglasses-32v2.png',
-          },
-        })
-      } else {
         browser.browserAction.setIcon({
           path: {
             16: '../icons/ez-32.png',
@@ -47,6 +38,16 @@ function checkIcon() {
             48: '../icons/ez-32.png',
             64: '../icons/ez-32.png',
             128: '../icons/ez-32.png',
+          },
+        })
+      } else {
+        browser.browserAction.setIcon({
+          path: {
+            16: '../icons/hard-32.png',
+            32: '../icons/hard-32.png',
+            48: '../icons/hard-32.png',
+            64: '../icons/hard-32.png',
+            128: '../icons/hard-32.png',
           },
         })
       }
